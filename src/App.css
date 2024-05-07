@@ -1,0 +1,25 @@
+.card-container1 {
+	display:flex;
+  flex-wrap:wrap;
+  gap: 3px;
+}
+
+.card {
+	flex: 1 1 calc(25.0% - 20px);
+	padding: 10px;
+	box-sizing: border-box;
+	/*background: lightgreen; */
+	border-radius: 5px;
+}
+
+@media (max-width: 768px) {
+	.card {
+		flex: 1 1 calc(50% - 10px);
+	}
+}
+
+@media (max-width: 480px) {
+	.card {
+		flex: 1 1 calc(100% - 10px);
+	}
+}
