@@ -1,27 +1,21 @@
 import { Card } from "./Card";
 import './UnivList.css';
 import { useState, useEffect } from "react";
-import SearchTextbox from "./SearchTextbox";
-import OrderBy from "./OrderBy";
 import axios from "axios";
 
-function UnivList() {
-  const [university, setUniversity] = useState([]);
-  const [loading, setLoading] = useState(true);
-  const [sortedItems, setSortedItems] = useState([...university]);
 
+function UnivList() {
+
+  const [university, setUniversity] = useState([]);
   const [searchQuery2, setSearchQuery2] = useState('');
   const [sortBy, setSortBy] = useState('country');
-
-  const [selectedItem, setSelectedItem] = useState(null);
-
  
   // Handle search input
   const handleSearch2 = (event) => {
     setSearchQuery2(event.target.value);
   };
   // Handle sorting selection
-  const handleSort2 = (event) => {
+  const handleSort2 = () => {
     setSortBy('name');
   };
   //Filtered&Sorted
@@ -31,19 +25,22 @@ function UnivList() {
     )
     .sort((a, b) => a[sortBy].localeCompare(b[sortBy]));
 
+    const getData = async () => {
 
-  localStorage.setItem("univ", JSON.stringify(university))
-
-  const handleItemClick = (item) => {
-    setSelectedItem(item);
-  };
-
-useEffect(() => {
-  axios.get('http://universities.hipolabs.com/search?country=United%20Arab%20Emirates')
+      const response = await axios.get('http://universities.hipolabs.com/search?country=United%20Arab%20Emirates');
+      setUniversity(response.data) 
+      }
+  
+useEffect( () => {
+  if(university) {
+    getData();
+    {/* 
+    axios.get('http://universities.hipolabs.com/search?country=United%20Arab%20Emirates')
   .then(response => setUniversity(response.data))
   .catch(error => console.log(error)) ;
-  setSortedItems(university);
-},[university,sortedItems]);
+  */}
+}
+},[university]);
 
 
     return(
@@ -75,16 +72,15 @@ useEffect(() => {
 
 {filteredAndSortedItems && filteredAndSortedItems.map( (item,index) => (
   <li key={index} > 
-  
   <div className="card2">
         <Card 
             imgSrc="https://picsum.photos/id/193/300/200"
             imgAlt="Card Image 3"
             title={item.name}
-            description=   "This is the real card description section. You can add more details about the product here"
+            website= {item.web_pages}
+            country= {item.country}
             buttonText="Details"
             link= {`/university/:${item.name}`}
-            onClick={() => handleItemClick(item)}
             
           />
           </div>
