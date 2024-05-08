@@ -6,10 +6,12 @@ import axios from "axios";
 
 function UnivList() {
 
-  const [university, setUniversity] = useState([]);
+  const [university, setUniversity] = useState(null);
   const [searchQuery2, setSearchQuery2] = useState('');
   const [sortBy, setSortBy] = useState('country');
  
+  let counter = 0 ;
+
   // Handle search input
   const handleSearch2 = (event) => {
     setSearchQuery2(event.target.value);
@@ -19,28 +21,38 @@ function UnivList() {
     setSortBy('name');
   };
   //Filtered&Sorted
-  const filteredAndSortedItems = university
+  const univ = JSON.parse(localStorage.getItem('univ'))   ;
+  console.log( counter++  + "univ: " + univ); 
+  console.log( counter++  + "university: " + university); 
+
+  const filteredAndSortedItems = univ? univ : []
     .filter((item) =>
       item.name.toLowerCase().includes(searchQuery2.toLowerCase())
     )
     .sort((a, b) => a[sortBy].localeCompare(b[sortBy]));
 
-    const getData = async () => {
 
+    const getData = async () => {
+      
+      try{
+if(!univ  ) {
       const response = await axios.get('http://universities.hipolabs.com/search?country=United%20Arab%20Emirates');
-      setUniversity(response.data) 
+      setUniversity(response.data) ;
+      const apiData = response.data;
+      localStorage.setItem('univ', JSON.stringify(apiData)  );
+      console.log( counter++ + "inside the getData !!!") ;
+    }
+    
+    } catch (error) {
+    console.error('Error fetching data:', error);
+  }
       }
   
 useEffect( () => {
-  if(university) {
+  console.log( counter++ + "inside the effect !!!") ;
     getData();
-    {/* 
-    axios.get('http://universities.hipolabs.com/search?country=United%20Arab%20Emirates')
-  .then(response => setUniversity(response.data))
-  .catch(error => console.log(error)) ;
-  */}
-}
-},[university]);
+  
+},[]);
 
 
     return(
