@@ -21,11 +21,11 @@ function UnivList() {
     setSortBy('name');
   };
   //Filtered&Sorted
-  const univ = JSON.parse(localStorage.getItem('univ'))   ;
+  const univ = JSON.parse(localStorage.getItem('univ')) || []  ;
   console.log( counter++  + "univ: " + univ); 
   console.log( counter++  + "university: " + university); 
 
-  const filteredAndSortedItems = univ? univ : []
+  const filteredAndSortedItems = univ
     .filter((item) =>
       item.name.toLowerCase().includes(searchQuery2.toLowerCase())
     )
@@ -35,7 +35,7 @@ function UnivList() {
     const getData = async () => {
       
       try{
-if(!univ  ) {
+if( univ.length == 0  ) {
       const response = await axios.get('http://universities.hipolabs.com/search?country=United%20Arab%20Emirates');
       setUniversity(response.data) ;
       const apiData = response.data;
